@@ -3,10 +3,9 @@ import { supabase } from '../lib/supabase'
 import { useAuthStore } from '../store/authStore'
 
 export function useAuth() {
-  const { user, profile, loading, setUser, setLoading, fetchProfile } = useAuthStore()
+  const { setUser, setLoading, fetchProfile } = useAuthStore()
 
   useEffect(() => {
-    // get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       const currentUser = session?.user ?? null
       setUser(currentUser)
@@ -14,7 +13,6 @@ export function useAuth() {
       setLoading(false)
     })
 
-    // listen for auth changes (login, logout, token refresh)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         const currentUser = session?.user ?? null
@@ -25,7 +23,9 @@ export function useAuth() {
     )
 
     return () => subscription.unsubscribe()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const { user, profile, loading } = useAuthStore()
   return { user, profile, loading }
 }
