@@ -51,7 +51,10 @@ export function useDashboard() {
   }, [user])
 
   useEffect(() => {
-    fetchDashboard()
+    async function load() {
+      await fetchDashboard()
+    }
+    load()
   }, [fetchDashboard])
 
   return { ...data, loading, refetch: fetchDashboard }
