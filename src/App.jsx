@@ -14,6 +14,7 @@ function AuthRedirect() {
     if (!loading && user) {
       navigate('/dashboard', { replace: true })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading])
 
   return null
@@ -27,17 +28,13 @@ export default function App() {
       <AuthRedirect />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-
         <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-
-        {/* placeholder routes — akan diisi satu per satu */}
         <Route path="/accounts"     element={<ProtectedRoute><div className="p-8 text-gray-400">Accounts — coming soon</div></ProtectedRoute>} />
         <Route path="/transactions" element={<ProtectedRoute><div className="p-8 text-gray-400">Transactions — coming soon</div></ProtectedRoute>} />
         <Route path="/budgets"      element={<ProtectedRoute><div className="p-8 text-gray-400">Budgets — coming soon</div></ProtectedRoute>} />
         <Route path="/goals"        element={<ProtectedRoute><div className="p-8 text-gray-400">Goals — coming soon</div></ProtectedRoute>} />
         <Route path="/bills"        element={<ProtectedRoute><div className="p-8 text-gray-400">Bills — coming soon</div></ProtectedRoute>} />
         <Route path="/investments"  element={<ProtectedRoute><div className="p-8 text-gray-400">Investments — coming soon</div></ProtectedRoute>} />
-
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>
