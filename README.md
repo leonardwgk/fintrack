@@ -1,16 +1,91 @@
-# React + Vite
+# fintrack
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal financial tracker — built with React, Vite, Tailwind CSS, and Supabase.
 
-Currently, two official plugins are available:
+## Features
+- Multi-account manager (bank, e-wallet, crypto, dll)
+- Income & expense tracker with categories
+- Budget setup (fixed & percentage)
+- Wealth & net worth tracker
+- Financial goals with progress tracking
+- Bills & subscriptions manager
+- Investment portfolio tracker
+- Finance charts & monthly summaries
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech stack
+- **Frontend**: React + Vite
+- **Styling**: Tailwind CSS v4
+- **Database + Auth**: Supabase (PostgreSQL)
+- **State**: Zustand
+- **Charts**: Recharts
+- **Routing**: React Router v6
+- **Hosting**: Vercel
 
-## React Compiler
+## Getting started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. Clone & install
+```bash
+git clone https://github.com/your-username/fintrack.git
+cd fintrack
+npm install
+```
 
-## Expanding the ESLint configuration
+### 2. Setup environment
+```bash
+cp .env.example .env.local
+```
+Isi `VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY` dari dashboard Supabase kamu.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 3. Run database migration
+Buka Supabase SQL Editor, paste isi file `supabase/migrations/001_init_fintrack.sql`, dan run.
+
+### 4. Start dev server
+```bash
+npm run dev
+```
+
+## Git convention
+
+### Branch
+| Branch | Fungsi |
+|--------|--------|
+| `main` | Production — stable only |
+| `dev` | Development — semua fitur merge ke sini |
+| `feat/*` | Fitur baru |
+| `fix/*` | Bug fix |
+
+### Commit message
+```
+feat(auth): add login and register page
+fix(transactions): correct negative balance calculation
+chore(deps): add recharts and zustand
+refactor(accounts): simplify account type handling
+docs(readme): update setup instructions
+```
+
+### Workflow
+```bash
+git checkout dev
+git checkout -b feat/nama-fitur
+# ... kerjakan fitur ...
+git add .
+git commit -m "feat(scope): description"
+git push origin feat/nama-fitur
+# buat PR ke dev di GitHub
+```
+
+## Project structure
+```
+src/
+├── components/
+│   ├── auth/        # ProtectedRoute, dll
+│   ├── ui/          # Button, Input, Card, dll
+│   └── layout/      # Sidebar, Header, dll
+├── hooks/           # useAuth, useTransactions, dll
+├── lib/             # supabase.js client
+├── pages/           # LoginPage, DashboardPage, dll
+├── store/           # Zustand stores
+└── styles/          # index.css
+supabase/
+└── migrations/      # SQL migration files
+```
