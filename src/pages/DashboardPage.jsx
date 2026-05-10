@@ -1,5 +1,5 @@
 import AppLayout from '../components/layout/AppLayout'
-import StatCard from '../components/ui/StatCard'
+import { StatCard, Card, Badge, Divider } from '../components/ui/index'
 import { useDashboard } from '../hooks/useDashboard'
 import { useAuthStore } from '../store/authStore'
 import { formatCurrency, formatDate, currentMonthLabel } from '../lib/format'
@@ -12,156 +12,185 @@ export default function DashboardPage() {
     recentTransactions, loading,
   } = useDashboard()
 
-  const greeting = () => {
-    const h = new Date().getHours()
-    if (h < 12) return 'Selamat pagi'
-    if (h < 17) return 'Selamat siang'
-    return 'Selamat malam'
-  }
+  const hour = new Date().getHours()
+  const greeting = hour < 12 ? 'Pagi' : hour < 17 ? 'Siang' : 'Malam'
+  const firstName = profile?.full_name?.split(' ')[0] || 'there'
+
+  const savingsRate = monthlyIncome > 0
+    ? Math.round(((monthlyIncome - monthlyExpense) / monthlyIncome) * 100)
+    : 0
 
   return (
     <AppLayout>
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div style={{ maxWidth:900, margin:'0 auto' }}>
 
-        {/* header */}
-        <div>
-          <h1 className="text-xl font-semibold text-gray-900">
-            {greeting()}, {profile?.full_name?.split(' ')[0] || 'there'} 👋
+        {/* greeting */}
+        <div className="animate-fade-up" style={{ marginBottom:28 }}>
+          <p style={{ fontSize:12, color:'var(--ink-muted)', letterSpacing:'.06em', textTransform:'uppercase', margin:'0 0 4px' }}>
+            {new Date().toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long' })}
+          </p>
+          <h1 style={{ fontSize:26, fontWeight:600, letterSpacing:'-.03em', margin:0, color:'var(--ink)' }}>
+            Selamat {greeting}, {firstName} 👋
           </h1>
-          <p className="text-sm text-gray-400 mt-0.5">Ringkasan keuangan kamu hari ini</p>
         </div>
 
-        {/* net worth hero */}
-        <div className="rounded-2xl bg-gray-900 text-white p-6">
-          <p className="text-xs font-medium text-gray-400 mb-1">Total net worth</p>
-          {loading ? (
-            <div className="h-9 w-48 bg-gray-700 rounded animate-pulse" />
-          ) : (
-            <p className="text-4xl font-semibold tracking-tight">
-              {formatCurrency(netWorth)}
-            </p>
-          )}
-          <div className="flex gap-6 mt-4 pt-4 border-t border-gray-700">
+        {/* net worth hero card */}
+        <div className="animate-fade-up animate-delay-100" style={{
+          background: 'var(--ink)',
+          borderRadius: 'var(--radius-xl)',
+          padding: '28px 32px',
+          marginBottom: 16,
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          {/* decorative circles */}
+          <div style={{ position:'absolute', top:-40, right:-40, width:180, height:180, borderRadius:'50%', background:'rgba(255,255,255,.03)', pointerEvents:'none' }} />
+          <div style={{ position:'absolute', bottom:-60, right:60, width:240, height:240, borderRadius:'50%', background:'rgba(255,255,255,.02)', pointerEvents:'none' }} />
+
+          <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap', gap:16, position:'relative', zIndex:1 }}>
             <div>
-              <p className="text-xs text-gray-500">Total aset</p>
+              <p style={{ color:'rgba(255,255,255,.4)', fontSize:11, letterSpacing:'.1em', textTransform:'uppercase', margin:'0 0 8px' }}>Total net worth</p>
               {loading
-                ? <div className="h-5 w-24 bg-gray-700 rounded animate-pulse mt-1" />
-                : <p className="text-sm font-medium text-green-400">{formatCurrency(totalAssets)}</p>
+                ? <div className="skeleton" style={{ height:44, width:220, background:'rgba(255,255,255,.1)' }} />
+                : <p style={{ color:'white', fontSize:40, fontWeight:600, letterSpacing:'-.04em', margin:0, lineHeight:1 }}>
+                    {formatCurrency(netWorth)}
+                  </p>
               }
             </div>
-            <div>
-              <p className="text-xs text-gray-500">Total liabilitas</p>
-              {loading
-                ? <div className="h-5 w-24 bg-gray-700 rounded animate-pulse mt-1" />
-                : <p className="text-sm font-medium text-red-400">{formatCurrency(totalLiabilities)}</p>
-              }
+            <div style={{ display:'flex', gap:24 }}>
+              <div>
+                <p style={{ color:'rgba(255,255,255,.35)', fontSize:11, margin:'0 0 4px', letterSpacing:'.04em' }}>Aset</p>
+                {loading
+                  ? <div className="skeleton" style={{ height:18, width:100, background:'rgba(255,255,255,.1)' }} />
+                  : <p style={{ color:'#4ade80', fontSize:15, fontWeight:500, margin:0 }}>+{formatCurrency(totalAssets)}</p>
+                }
+              </div>
+              <div>
+                <p style={{ color:'rgba(255,255,255,.35)', fontSize:11, margin:'0 0 4px', letterSpacing:'.04em' }}>Liabilitas</p>
+                {loading
+                  ? <div className="skeleton" style={{ height:18, width:100, background:'rgba(255,255,255,.1)' }} />
+                  : <p style={{ color:'#f87171', fontSize:15, fontWeight:500, margin:0 }}>-{formatCurrency(totalLiabilities)}</p>
+                }
+              </div>
             </div>
           </div>
         </div>
 
         {/* monthly summary */}
-        <div>
-          <h2 className="text-sm font-medium text-gray-500 mb-3">{currentMonthLabel()}</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <StatCard
-              label="Pemasukan"
-              value={formatCurrency(monthlyIncome)}
-              accent="green"
-              loading={loading}
-            />
-            <StatCard
-              label="Pengeluaran"
-              value={formatCurrency(monthlyExpense)}
-              accent="red"
-              loading={loading}
-            />
-            <StatCard
-              label="Saldo bersih"
-              value={formatCurrency(netBalance)}
-              accent={netBalance >= 0 ? 'blue' : 'red'}
-              sub={netBalance >= 0 ? 'Surplus bulan ini' : 'Defisit bulan ini'}
-              loading={loading}
-            />
+        <div className="animate-fade-up animate-delay-200">
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:12 }}>
+            <p style={{ fontSize:12, fontWeight:500, color:'var(--ink-muted)', margin:0, letterSpacing:'.04em', textTransform:'uppercase' }}>{currentMonthLabel()}</p>
+            {!loading && savingsRate !== 0 && (
+              <Badge accent={savingsRate >= 20 ? 'green' : savingsRate > 0 ? 'amber' : 'red'}>
+                Saving rate {savingsRate}%
+              </Badge>
+            )}
+          </div>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:12 }} className="stats-grid">
+            <StatCard label="Pemasukan"   value={formatCurrency(monthlyIncome)}  accent="green"                        loading={loading} sub="bulan ini" />
+            <StatCard label="Pengeluaran" value={formatCurrency(monthlyExpense)} accent="red"                          loading={loading} sub="bulan ini" />
+            <StatCard label="Saldo bersih" value={formatCurrency(netBalance)}    accent={netBalance >= 0 ? 'blue' : 'red'} loading={loading} sub={netBalance >= 0 ? 'Surplus' : 'Defisit'} />
           </div>
         </div>
 
-        {/* recent transactions */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-medium text-gray-500">Transaksi terbaru</h2>
-            <a href="/transactions" className="text-xs text-blue-600 hover:underline">Lihat semua</a>
-          </div>
+        {/* bottom row */}
+        <div className="animate-fade-up animate-delay-300" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginTop:16 }} id="bottom-row">
 
-          <div className="bg-white rounded-2xl border border-gray-100 divide-y divide-gray-50">
+          {/* recent transactions */}
+          <Card style={{ padding:0, gridColumn:'1 / -1' }} id="recent-tx-card">
+            <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'18px 22px' }}>
+              <p style={{ fontSize:13, fontWeight:500, color:'var(--ink)', margin:0 }}>Transaksi terbaru</p>
+              <a href="/transactions" style={{ fontSize:12, color:'var(--blue)', textDecoration:'none' }}>Lihat semua →</a>
+            </div>
+            <Divider />
+
             {loading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="flex items-center justify-between px-5 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gray-100 animate-pulse" />
-                    <div className="space-y-1.5">
-                      <div className="h-3 w-28 bg-gray-100 rounded animate-pulse" />
-                      <div className="h-2.5 w-16 bg-gray-100 rounded animate-pulse" />
+              Array.from({length:4}).map((_,i) => (
+                <div key={i} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'14px 22px' }}>
+                  <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                    <div className="skeleton" style={{ width:36, height:36, borderRadius:'50%' }} />
+                    <div>
+                      <div className="skeleton" style={{ height:12, width:120, marginBottom:6 }} />
+                      <div className="skeleton" style={{ height:10, width:70 }} />
                     </div>
                   </div>
-                  <div className="h-3 w-20 bg-gray-100 rounded animate-pulse" />
+                  <div className="skeleton" style={{ height:12, width:80 }} />
                 </div>
               ))
             ) : recentTransactions.length === 0 ? (
-              <div className="px-5 py-10 text-center">
-                <p className="text-sm text-gray-400">Belum ada transaksi</p>
-                <a href="/transactions" className="text-xs text-blue-600 hover:underline mt-1 block">
-                  Tambah transaksi pertama
-                </a>
+              <div style={{ padding:'40px 22px', textAlign:'center' }}>
+                <p style={{ fontSize:13, color:'var(--ink-faint)', margin:'0 0 6px' }}>Belum ada transaksi</p>
+                <a href="/transactions" style={{ fontSize:12, color:'var(--blue)', textDecoration:'none' }}>Tambah transaksi pertama →</a>
               </div>
             ) : (
-              recentTransactions.map((tx) => (
-                <div key={tx.id} className="flex items-center justify-between px-5 py-4">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center text-sm"
-                      style={{ background: tx.categories?.color || '#f3f4f6' }}
-                    >
-                      {tx.categories?.icon || (tx.type === 'income' ? '↑' : '↓')}
+              recentTransactions.map((tx, i) => (
+                <div key={tx.id}>
+                  <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'13px 22px' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+                      <div style={{
+                        width:36, height:36, borderRadius:'50%',
+                        background: tx.categories?.color || (tx.type === 'income' ? 'var(--green-soft)' : 'var(--surface-2)'),
+                        display:'flex', alignItems:'center', justifyContent:'center', fontSize:15, flexShrink:0,
+                      }}>
+                        {tx.categories?.icon || (tx.type === 'income' ? '↑' : '↓')}
+                      </div>
+                      <div>
+                        <p style={{ fontSize:13, fontWeight:500, color:'var(--ink)', margin:'0 0 2px' }}>
+                          {tx.notes || tx.categories?.name || '—'}
+                        </p>
+                        <p style={{ fontSize:11, color:'var(--ink-muted)', margin:0 }}>
+                          {tx.categories?.name && tx.notes ? tx.categories.name + ' · ' : ''}{formatDate(tx.date)}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-800">
-                        {tx.notes || tx.categories?.name || '—'}
-                      </p>
-                      <p className="text-xs text-gray-400">{formatDate(tx.date)}</p>
-                    </div>
+                    <span style={{ fontSize:13, fontWeight:500, color: tx.type === 'income' ? 'var(--green)' : 'var(--red)' }}>
+                      {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
+                    </span>
                   </div>
-                  <span className={`text-sm font-medium ${tx.type === 'income' ? 'text-green-600' : 'text-red-500'}`}>
-                    {tx.type === 'income' ? '+' : '-'}{formatCurrency(tx.amount)}
-                  </span>
+                  {i < recentTransactions.length - 1 && <Divider />}
                 </div>
               ))
             )}
-          </div>
-        </div>
+          </Card>
 
-        {/* quick actions */}
-        <div>
-          <h2 className="text-sm font-medium text-gray-500 mb-3">Aksi cepat</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {[
-              { label: 'Tambah transaksi', href: '/transactions', icon: '+', color: 'bg-blue-50 text-blue-700' },
-              { label: 'Kelola akun',       href: '/accounts',     icon: '🏦', color: 'bg-purple-50 text-purple-700' },
-              { label: 'Set budget',        href: '/budgets',      icon: '◎', color: 'bg-amber-50 text-amber-700' },
-              { label: 'Tambah goal',       href: '/goals',        icon: '◈', color: 'bg-green-50 text-green-700' },
-            ].map(({ label, href, icon, color }) => (
-              <a
-                key={href}
-                href={href}
-                className={`rounded-xl p-4 flex flex-col gap-2 ${color} hover:opacity-80 transition-opacity`}
-              >
-                <span className="text-xl">{icon}</span>
-                <span className="text-xs font-medium leading-tight">{label}</span>
-              </a>
-            ))}
-          </div>
+          {/* quick actions */}
+          <Card style={{ padding:'18px 22px', gridColumn:'1 / -1' }}>
+            <p style={{ fontSize:13, fontWeight:500, color:'var(--ink)', margin:'0 0 14px' }}>Aksi cepat</p>
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:10 }} className="quick-actions">
+              {[
+                { label:'Tambah transaksi', href:'/transactions', icon:'＋', bg:'var(--ink)',         color:'white'           },
+                { label:'Kelola akun',      href:'/accounts',     icon:'🏦', bg:'var(--purple-soft)', color:'var(--purple)'   },
+                { label:'Set budget',       href:'/budgets',      icon:'◎',  bg:'var(--amber-soft)',  color:'var(--amber)'    },
+                { label:'Tambah goal',      href:'/goals',        icon:'◈',  bg:'var(--green-soft)',  color:'var(--green)'    },
+              ].map(({ label, href, icon, bg, color }) => (
+                <a
+                  key={href}
+                  href={href}
+                  style={{
+                    background:bg, color, borderRadius:'var(--radius-md)',
+                    padding:'14px', display:'flex', flexDirection:'column', gap:8,
+                    textDecoration:'none', transition:'opacity .15s', fontSize:12, fontWeight:500,
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.opacity='.8'}
+                  onMouseLeave={e => e.currentTarget.style.opacity='1'}
+                >
+                  <span style={{ fontSize:20 }}>{icon}</span>
+                  <span style={{ lineHeight:1.3 }}>{label}</span>
+                </a>
+              ))}
+            </div>
+          </Card>
         </div>
 
       </div>
+
+      <style>{`
+        @media (max-width: 640px) {
+          .stats-grid { grid-template-columns: 1fr 1fr !important; }
+          .stats-grid > *:last-child { grid-column: 1 / -1; }
+          .quick-actions { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+      `}</style>
     </AppLayout>
   )
 }
