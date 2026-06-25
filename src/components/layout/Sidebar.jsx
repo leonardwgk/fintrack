@@ -5,6 +5,7 @@ const navItems = [
   { to: '/dashboard',    icon: '▣', label: 'Dashboard' },
   { to: '/accounts',     icon: '🏦', label: 'Accounts' },
   { to: '/transactions', icon: '↕',  label: 'Transaksi' },
+  { to: '/allowance',    icon: '◐',  label: 'Jatah Bulanan' },
   { to: '/budgets',      icon: '◎',  label: 'Budget' },
   { to: '/goals',        icon: '◈',  label: 'Goals' },
   { to: '/bills',        icon: '↻',  label: 'Bills' },

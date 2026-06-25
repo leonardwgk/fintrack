@@ -4,6 +4,13 @@ import { useAuth } from './hooks/useAuth'
 import { useAuthStore } from './store/authStore'
 import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
+import AccountsPage from './pages/AccountsPage'
+import TransactionsPage from './pages/TransactionsPage'
+import AllowancePage from './pages/AllowancePage'
+import BudgetsPage from './pages/BudgetsPage'
+import GoalsPage from './pages/GoalsPage'
+import BillsPage from './pages/BillsPage'
+import InvestmentsPage from './pages/InvestmentsPage'
 import ProtectedRoute from './components/auth/ProtectedRoute'
 
 function AuthRedirect() {
@@ -29,12 +36,13 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-        <Route path="/accounts"     element={<ProtectedRoute><div className="p-8 text-gray-400">Accounts — coming soon</div></ProtectedRoute>} />
-        <Route path="/transactions" element={<ProtectedRoute><div className="p-8 text-gray-400">Transactions — coming soon</div></ProtectedRoute>} />
-        <Route path="/budgets"      element={<ProtectedRoute><div className="p-8 text-gray-400">Budgets — coming soon</div></ProtectedRoute>} />
-        <Route path="/goals"        element={<ProtectedRoute><div className="p-8 text-gray-400">Goals — coming soon</div></ProtectedRoute>} />
-        <Route path="/bills"        element={<ProtectedRoute><div className="p-8 text-gray-400">Bills — coming soon</div></ProtectedRoute>} />
-        <Route path="/investments"  element={<ProtectedRoute><div className="p-8 text-gray-400">Investments — coming soon</div></ProtectedRoute>} />
+        <Route path="/accounts"     element={<ProtectedRoute><AccountsPage /></ProtectedRoute>} />
+        <Route path="/transactions" element={<ProtectedRoute><TransactionsPage /></ProtectedRoute>} />
+        <Route path="/allowance"    element={<ProtectedRoute><AllowancePage /></ProtectedRoute>} />
+        <Route path="/budgets"      element={<ProtectedRoute><BudgetsPage /></ProtectedRoute>} />
+        <Route path="/goals"        element={<ProtectedRoute><GoalsPage /></ProtectedRoute>} />
+        <Route path="/bills"        element={<ProtectedRoute><BillsPage /></ProtectedRoute>} />
+        <Route path="/investments"  element={<ProtectedRoute><InvestmentsPage /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>

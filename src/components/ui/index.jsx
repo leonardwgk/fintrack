@@ -72,7 +72,7 @@ export function Badge({ children, accent = 'default' }) {
 }
 
 // ── Button ──────────────────────────────────────────────────────
-export function Button({ children, onClick, variant = 'primary', size = 'md', disabled = false, style: extraStyle }) {
+export function Button({ children, onClick, type = 'button', variant = 'primary', size = 'md', disabled = false, style: extraStyle }) {
   const sizes = {
     sm: { padding:'6px 12px', fontSize:12 },
     md: { padding:'10px 18px', fontSize:13 },
@@ -89,6 +89,7 @@ export function Button({ children, onClick, variant = 'primary', size = 'md', di
 
   return (
     <button
+      type={type}
       onClick={onClick}
       disabled={disabled}
       style={{
@@ -114,4 +115,30 @@ export function Button({ children, onClick, variant = 'primary', size = 'md', di
 // ── Divider ────────────────────────────────────────────────────
 export function Divider({ style }) {
   return <hr style={{ border:'none', borderTop:'1px solid var(--border)', margin:'0', ...style }} />
+}
+
+// ── EmptyState ─────────────────────────────────────────────────
+export function EmptyState({ icon = '◌', title, description, action }) {
+  return (
+    <div style={{ padding:'56px 24px', textAlign:'center', display:'flex', flexDirection:'column', alignItems:'center', gap:6 }}>
+      <div style={{ fontSize:36, marginBottom:6, opacity:.5 }}>{icon}</div>
+      <p style={{ fontSize:15, fontWeight:600, color:'var(--ink)', margin:0, letterSpacing:'-.02em' }}>{title}</p>
+      {description && <p style={{ fontSize:13, color:'var(--ink-muted)', margin:0, maxWidth:320 }}>{description}</p>}
+      {action && <div style={{ marginTop:12 }}>{action}</div>}
+    </div>
+  )
+}
+
+// ── ProgressBar ────────────────────────────────────────────────
+export function ProgressBar({ value = 0, accent = 'blue', height = 8 }) {
+  const colors = {
+    green: 'var(--green)', red: 'var(--red)', blue: 'var(--blue)',
+    amber: 'var(--amber)', purple: 'var(--purple)', ink: 'var(--ink)',
+  }
+  const pct = Math.max(0, Math.min(100, value))
+  return (
+    <div style={{ width:'100%', height, background:'var(--surface-3)', borderRadius:99, overflow:'hidden' }}>
+      <div style={{ width:`${pct}%`, height:'100%', background:colors[accent] || colors.blue, borderRadius:99, transition:'width .4s ease' }} />
+    </div>
+  )
 }
