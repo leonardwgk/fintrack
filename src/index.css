@@ -1,1 +1,10 @@
+/* BARIS 1 HARUS @IMPORT */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
+
+/* BARIS 2 (Jika pakai Tailwind 4) */
 @import "tailwindcss";
+
+/* BARIS BERIKUTNYA BARU STYLE LAIN */
+@theme {
+  --font-sans: "DM Sans", ui-sans-serif, system-ui;
+}
