@@ -14,7 +14,7 @@ export default function DashboardPage() {
 
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Pagi' : hour < 17 ? 'Siang' : 'Malam'
-  const firstName = profile?.full_name?.split(' ')[0] || 'there'
+  const firstName = profile?.full_name?.split(' ')[0] || 'Leon'
 
   const savingsRate = monthlyIncome > 0
     ? Math.round(((monthlyIncome - monthlyExpense) / monthlyIncome) * 100)
