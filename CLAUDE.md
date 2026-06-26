@@ -263,11 +263,30 @@ git push origin feat/nama-fitur
 | Dashboard          | ✅ Done        | `/dashboard`    |
 | Accounts Manager   | ✅ Done        | `/accounts`     |
 | Transactions       | ✅ Done        | `/transactions` |
-| Budgets            | 🚧 In Progress | `/budgets`      |
-| Goals              | 🚧 In Progress | `/goals`        |
-| Bills & Subs       | 🚧 In Progress | `/bills`        |
-| Investments        | 📋 Planned     | `/investments`  |
+| Budgets            | ✅ Done        | `/budgets`      |
+| Goals              | ✅ Done        | `/goals`        |
+| Bills & Subs       | ✅ Done        | `/bills`        |
+| Investments        | ✅ Done        | `/investments`  |
+| Jatah Bulanan      | ✅ Done        | `/allowance`    |
 | AI Email Parsing   | 📋 Planned v1.1| —               |
+
+> Semua core feature CRUD sudah lengkap & terpasang di router. App sudah siap dipakai.
+> Kategori default otomatis di-seed sekali per user saat pertama membuka halaman yang butuh kategori (lihat `useCategories`). Transaksi otomatis menyesuaikan `balance` akun terkait (income +, expense −) di `useTransactions`.
+
+### Jatah Bulanan (`/allowance`)
+Untuk pola "rekening = jatah bulanan needs, sisanya dipindah ke pocket Blu":
+- User set **jatah bulan ini** + pilih **rekening jatah**. Pengeluaran dari rekening itu dihitung sebagai pemakaian jatah.
+- **Sisa jatah** = jatah − terpakai. Lalu **rekonsiliasi**: masukkan saldo riil rekening (dari m-banking) untuk lihat **selisih** vs catatan.
+- Butuh migrasi `003_allowances.sql`. Halaman menampilkan banner kalau tabel belum ada (`needsMigration`).
+
+### Logika & Testing
+- **`src/lib/finance.js`** — semua logika bisnis murni (tanpa import supabase/React) agar bisa di-unit-test: `signedDelta`, `summarizeAccounts`, `dedupeCategories`, `mergeBudgetSpending`, `applyContribution`, `monthlyEquivalent`/`sumMonthly`, `withInvestmentMetrics`/`summarizePortfolio`, `reconcileAllowance`. Hooks mengkonsumsi helper ini.
+- Test pakai **Vitest**: `npm run test`. File: `src/lib/*.test.js`.
+
+### Migrations
+- `001_init_fintrack.sql` — skema awal.
+- `002_dedupe_categories.sql` — bersihkan kategori duplikat (akibat double-seed lama) + unique index `(user_id, type, lower(name))`.
+- `003_allowances.sql` — tabel `allowances` untuk fitur Jatah Bulanan.
 
 ---
 
@@ -288,8 +307,10 @@ Belum diimplementasi. Jangan kerjakan sampai semua core features selesai.
 ## Useful Commands
 
 ```bash
-npm run dev      # start dev server (localhost:5173)
-npm run build    # production build
-npm run lint     # eslint check (harus pass sebelum push)
-npm run preview  # preview production build locally
+npm run dev        # start dev server (localhost:5173)
+npm run build      # production build
+npm run lint       # eslint check (harus pass sebelum push)
+npm run test       # unit tests (vitest, harus pass sebelum push)
+npm run test:watch # vitest watch mode
+npm run preview    # preview production build locally
 ```
