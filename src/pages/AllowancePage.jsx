@@ -78,10 +78,11 @@ export default function AllowancePage() {
             {/* hero: jatah & sisa */}
             <div style={{ background: 'var(--ink)', borderRadius: 'var(--radius-xl)', padding: '26px 30px', marginBottom: 16, position: 'relative', overflow: 'hidden' }}>
               <div style={{ position: 'absolute', top: -40, right: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(255,255,255,.03)' }} />
-              <p style={{ color: 'rgba(255,255,255,.4)', fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', margin: '0 0 8px' }}>Sisa jatah</p>
-              <p style={{ color: a.remaining < 0 ? '#f87171' : 'white', fontSize: 36, fontWeight: 600, letterSpacing: '-.04em', margin: '0 0 16px', lineHeight: 1, fontFamily: 'var(--font-mono)' }}>
+              <p className="eyebrow" style={{ color: 'rgba(255,255,255,.55)', margin: '0 0 10px' }}>Sisa jatah</p>
+              <p className="mono" style={{ color: a.remaining < 0 ? '#e89177' : '#fff', fontSize: 'clamp(30px, 9vw, 40px)', fontWeight: 500, letterSpacing: '-.03em', margin: 0, lineHeight: 1 }}>
                 {formatCurrency(a.remaining)}
               </p>
+              <span className="tick" style={{ marginTop: 12, marginBottom: 16 }} />
               <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
                 <div>
                   <p style={{ color: 'rgba(255,255,255,.35)', fontSize: 11, margin: '0 0 2px' }}>Jatah bulan ini</p>
@@ -128,7 +129,7 @@ export default function AllowancePage() {
                 <div style={{
                   marginTop: 16, padding: '14px 16px', borderRadius: 'var(--radius-md)',
                   background: a.matched ? 'var(--green-soft)' : 'var(--amber-soft)',
-                  border: `1px solid ${a.matched ? '#86efac' : '#fde68a'}`,
+                  border: `1px solid color-mix(in srgb, ${a.matched ? 'var(--green)' : 'var(--amber)'} 30%, transparent)`,
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
                     <div>

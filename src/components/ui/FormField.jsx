@@ -4,27 +4,27 @@ const labelStyle = {
   fontSize: 12,
   fontWeight: 500,
   color: 'var(--ink-soft)',
-  marginBottom: 6,
+  marginBottom: 7,
   letterSpacing: '.01em',
 }
 
 const controlStyle = {
   width: '100%',
-  padding: '11px 14px',
-  border: '1.5px solid var(--border)',
+  padding: '12px 14px',
+  border: '1px solid var(--line)',
   borderRadius: 'var(--radius-md)',
-  fontSize: 14,
+  fontSize: 15,
   fontFamily: 'var(--font-sans)',
   color: 'var(--ink)',
-  background: 'var(--white)',
+  background: 'var(--bone)',
   outline: 'none',
-  transition: 'border-color .15s',
+  transition: 'border-color .15s, box-shadow .15s',
   boxSizing: 'border-box',
 }
 
 const focusHandlers = {
-  onFocus: (e) => { e.target.style.borderColor = 'var(--ink)' },
-  onBlur: (e) => { e.target.style.borderColor = 'var(--border)' },
+  onFocus: (e) => { e.target.style.borderColor = 'var(--brass)'; e.target.style.boxShadow = '0 0 0 3px var(--brass-soft)' },
+  onBlur: (e) => { e.target.style.borderColor = 'var(--line)'; e.target.style.boxShadow = 'none' },
 }
 
 // ── Field (label + control wrapper) ────────────────────────────
